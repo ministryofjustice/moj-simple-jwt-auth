@@ -12,6 +12,17 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
     let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer xyz123' } }
     let(:decoder_double) { double(call: { payload: 'foobar' }) }
 
+    context 'when running in test mode' do
+      let(:env) { { 'rack.test' => true } }
+
+      it 'skips the middleware' do
+        expect(SimpleJwtAuth::Decode).not_to receive(:new)
+        expect(app).to receive(:call).with(env)
+
+        subject.call(env)
+      end
+    end
+
     context 'for a valid token' do
       before do
         allow(app).to receive(:call).with(env)

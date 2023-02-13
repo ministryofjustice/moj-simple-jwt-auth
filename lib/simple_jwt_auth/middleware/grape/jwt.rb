@@ -8,6 +8,8 @@ module SimpleJwtAuth
         ENV_PAYLOAD_KEY = 'grape_jwt.payload'
 
         def call(env)
+          return app.call(env) if test_env?(env)
+
           token = env.fetch(ENV_AUTH_KEY, '').split.last
 
           begin
@@ -25,6 +27,10 @@ module SimpleJwtAuth
         end
 
         private
+
+        def test_env?(env)
+          env['rack.test'] == true
+        end
 
         def logger
           SimpleJwtAuth.configuration.logger
