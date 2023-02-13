@@ -1,0 +1,24 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'spec/**/*'
+    - 'vendor/**/*'
+    - 'vendor/bundle/**/*'
+
+####################################
+## Customization for this project ##
+####################################
+
+Style/Documentation:
+  Enabled: false
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/MethodLength:
+  Max: 14
