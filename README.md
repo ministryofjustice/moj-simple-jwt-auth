@@ -6,14 +6,15 @@ the verification of this token and handling of the payload in the rack env.
 
 ## Installation
 
-For now this gem is not being published to rubygems as it is under heavy development so to use it just add
-the following to your Gemfile:
-
 ```ruby
-gem 'simple-jwt-auth', github: 'ministryofjustice/simple-jwt-auth'
+# directly from Github
+gem 'moj-simple-jwt-auth', github: 'ministryofjustice/moj-simple-jwt-auth'
+
+# or from RubyGems
+gem 'moj-simple-jwt-auth', '0.0.1'
 ```
 
-You can lock it to a specific branch or sha if you want too.
+You can lock it to a specific version, branch or sha if you want too.
 
 ## Usage
 
@@ -43,7 +44,7 @@ This gem uses rubocop and simplecov (at 100% coverage).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ministryofjustice/simple-jwt-auth.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ministryofjustice/moj-simple-jwt-auth.
 
 ## License
 

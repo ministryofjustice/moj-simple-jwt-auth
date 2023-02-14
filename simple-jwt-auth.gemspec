@@ -5,14 +5,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'simple_jwt_auth/version'
 
 Gem::Specification.new do |spec|
-  spec.name     = 'simple-jwt-auth'
+  spec.name     = 'moj-simple-jwt-auth'
   spec.version  = SimpleJwtAuth::VERSION
 
   spec.authors  = ['Jesus Laiz']
   spec.email    = ['zheileman@users.noreply.github.com']
 
-  spec.summary  = 'Ruby helper to perform signing and verification of JWT payloads'
-  spec.homepage = 'https://github.com/ministryofjustice/simple-jwt-auth'
+  spec.summary  = 'Simple JWT Auth ruby gem with middleware for Faraday and Grape.'
+  spec.homepage = 'https://github.com/ministryofjustice/moj-simple-jwt-auth'
   spec.license  = 'MIT'
 
   spec.metadata = {
