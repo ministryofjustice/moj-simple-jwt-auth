@@ -2,7 +2,9 @@
 
 module SimpleJwtAuth
   module Errors
-    class UndefinedIssuer < StandardError; end
-    class UnknownIssuer < StandardError; end
+    class IssuerError < StandardError; end
+
+    class UndefinedIssuer < IssuerError; end
+    class UnknownIssuer < IssuerError; end
   end
 end

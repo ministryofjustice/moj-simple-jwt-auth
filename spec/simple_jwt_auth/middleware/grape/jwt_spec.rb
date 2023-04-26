@@ -8,8 +8,10 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
   let(:app) { double('app') }
   let(:options) { nil }
 
+  let(:token) { 'xyz123' }
+
   describe '#call' do
-    let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer xyz123' } }
+    let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
     let(:decoder_double) { double(call: { payload: 'foobar' }) }
 
     context 'when running in test mode' do
@@ -40,6 +42,38 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
       it 'pass control to the app' do
         expect(app).to receive(:call).with(env)
         subject.call(env)
+      end
+    end
+
+    context 'for an unknown issuer' do
+      let(:token) { 'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOiIxNjgyNTA1NDk3IiwiZXhwIjoiMTY4MjUwNjEwNiIsImlzcyI6ImZvb2Jhci1pc3N1ZXIifQ.0gyP7qXrTRCUMi7TgsV1CbIbXTfALRT5y1Zf3WTup8Y' }
+
+      let(:response) do
+        [
+          400,
+          { 'Content-Type' => 'application/json' },
+          [{ status: 400, error: 'issuer `foobar-issuer` is not recognized' }.to_json]
+        ]
+      end
+
+      it 'returns a rack error response' do
+        expect(subject.call(env)).to eq(response)
+      end
+    end
+
+    context 'for an undefined issuer' do
+      let(:token) { 'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOiIxNjgyNTA1NDk3IiwiZXhwIjoiMTY4MjUwNjEwNiJ9.7WGH6fcyO512eN6fupRiSHh-lVkH7hpEN6wbDYHvEbc' }
+
+      let(:response) do
+        [
+          400,
+          { 'Content-Type' => 'application/json' },
+          [{ status: 400, error: 'issuer has not been configured' }.to_json]
+        ]
+      end
+
+      it 'returns a rack error response' do
+        expect(subject.call(env)).to eq(response)
       end
     end
 

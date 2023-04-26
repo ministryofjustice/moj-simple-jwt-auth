@@ -4,12 +4,16 @@ RSpec.describe SimpleJwtAuth::Errors do
   subject { Class.new { extend SimpleJwtAuth::Errors } }
 
   context 'Error subclasses' do
-    it 'UndefinedIssuer is a subclass of StandardError' do
-      expect(described_class::UndefinedIssuer).to be < StandardError
+    it 'IssuerError is a subclass of StandardError' do
+      expect(described_class::IssuerError).to be < StandardError
     end
 
-    it 'UnknownIssuer is a subclass of StandardError' do
-      expect(described_class::UnknownIssuer).to be < StandardError
+    it 'UndefinedIssuer is a subclass of IssuerError' do
+      expect(described_class::UndefinedIssuer).to be < described_class::IssuerError
+    end
+
+    it 'UnknownIssuer is a subclass of IssuerError' do
+      expect(described_class::UnknownIssuer).to be < described_class::IssuerError
     end
   end
 end

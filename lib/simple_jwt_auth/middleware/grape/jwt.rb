@@ -7,6 +7,7 @@ module SimpleJwtAuth
         ENV_AUTH_KEY = 'HTTP_AUTHORIZATION'
         ENV_PAYLOAD_KEY = 'grape_jwt.payload'
 
+        # rubocop:disable Metrics/AbcSize
         def call(env)
           return app.call(env) if test_env?(env)
 
@@ -19,12 +20,17 @@ module SimpleJwtAuth
             logger.debug "Authorized request, JWT payload: #{payload}"
 
             app.call(env)
+          rescue SimpleJwtAuth::Errors::IssuerError => e
+            logger.warn "JWT issuer error: #{e.message}"
+
+            [400, { 'Content-Type' => 'application/json' }, [{ status: 400, error: e.message }.to_json]]
           rescue JWT::DecodeError => e
             logger.warn "Unauthorized request, JWT error: #{e.message}"
 
             [401, { 'Content-Type' => 'application/json' }, [{ status: 401, error: e.message }.to_json]]
           end
         end
+        # rubocop:enable Metrics/AbcSize
 
         private
 
