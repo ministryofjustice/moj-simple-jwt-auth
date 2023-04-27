@@ -4,6 +4,10 @@ RSpec.describe SimpleJwtAuth::Errors do
   subject { Class.new { extend SimpleJwtAuth::Errors } }
 
   context 'Error subclasses' do
+    it 'Forbidden is a subclass of StandardError' do
+      expect(described_class::Forbidden).to be < StandardError
+    end
+
     it 'IssuerError is a subclass of StandardError' do
       expect(described_class::IssuerError).to be < StandardError
     end

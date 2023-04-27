@@ -17,6 +17,7 @@ require_relative 'simple_jwt_auth/decode'
 # Middleware helpers
 require_relative 'simple_jwt_auth/middleware/faraday/jwt' if defined?(Faraday)
 require_relative 'simple_jwt_auth/middleware/grape/jwt' if defined?(Grape)
+require_relative 'simple_jwt_auth/middleware/grape/authorisation' if defined?(Grape)
 
 module SimpleJwtAuth
 end

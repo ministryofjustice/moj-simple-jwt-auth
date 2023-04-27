@@ -43,6 +43,24 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
         expect(app).to receive(:call).with(env)
         subject.call(env)
       end
+
+      context 'for an endpoint forbidden for the token issuer' do
+        let(:response) do
+          [
+            403,
+            { 'Content-Type' => 'application/json' },
+            [{ error: 'error message' }.to_json]
+          ]
+        end
+
+        before do
+          allow(app).to receive(:call).and_raise(SimpleJwtAuth::Errors::Forbidden, 'error message')
+        end
+
+        it 'returns a rack error response' do
+          expect(subject.call(env)).to eq(response)
+        end
+      end
     end
 
     context 'for an unknown issuer' do
@@ -52,7 +70,7 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
         [
           400,
           { 'Content-Type' => 'application/json' },
-          [{ status: 400, error: 'issuer `foobar-issuer` is not recognized' }.to_json]
+          [{ error: 'issuer `foobar-issuer` is not recognized' }.to_json]
         ]
       end
 
@@ -68,7 +86,7 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
         [
           400,
           { 'Content-Type' => 'application/json' },
-          [{ status: 400, error: 'issuer has not been configured' }.to_json]
+          [{ error: 'issuer has not been configured' }.to_json]
         ]
       end
 
@@ -82,7 +100,7 @@ RSpec.describe SimpleJwtAuth::Middleware::Grape::Jwt do
         [
           401,
           { 'Content-Type' => 'application/json' },
-          [{ status: 401, error: 'Not enough or too many segments' }.to_json]
+          [{ error: 'Not enough or too many segments' }.to_json]
         ]
       end
 

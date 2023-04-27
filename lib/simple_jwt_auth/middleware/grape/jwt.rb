@@ -7,7 +7,7 @@ module SimpleJwtAuth
         ENV_AUTH_KEY = 'HTTP_AUTHORIZATION'
         ENV_PAYLOAD_KEY = 'grape_jwt.payload'
 
-        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def call(env)
           return app.call(env) if test_env?(env)
 
@@ -20,22 +20,27 @@ module SimpleJwtAuth
             logger.debug "Authorized request, JWT payload: #{payload}"
 
             app.call(env)
+          rescue SimpleJwtAuth::Errors::Forbidden => e
+            logger.warn "JWT issuer forbidden: #{e.message}"
+            rack_response(403, e.message)
           rescue SimpleJwtAuth::Errors::IssuerError => e
             logger.warn "JWT issuer error: #{e.message}"
-
-            [400, { 'Content-Type' => 'application/json' }, [{ status: 400, error: e.message }.to_json]]
+            rack_response(400, e.message)
           rescue JWT::DecodeError => e
             logger.warn "Unauthorized request, JWT error: #{e.message}"
-
-            [401, { 'Content-Type' => 'application/json' }, [{ status: 401, error: e.message }.to_json]]
+            rack_response(401, e.message)
           end
         end
-        # rubocop:enable Metrics/AbcSize
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
         private
 
         def test_env?(env)
           env['rack.test'] == true
+        end
+
+        def rack_response(http_code, error_msg)
+          [http_code, { 'Content-Type' => 'application/json' }, [{ error: error_msg }.to_json]]
         end
 
         def logger

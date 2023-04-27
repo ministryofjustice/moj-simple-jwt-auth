@@ -2,6 +2,7 @@
 
 module SimpleJwtAuth
   module Errors
+    class Forbidden < StandardError; end
     class IssuerError < StandardError; end
 
     class UndefinedIssuer < IssuerError; end
