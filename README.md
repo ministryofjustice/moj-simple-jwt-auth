@@ -36,6 +36,37 @@ For the **producer** side (the API service for instance) you will need to config
 
 There are several options you can configure, like expiration, leeway, logging, and more. Please refer to the [Configuration class](lib/simple_jwt_auth/configuration.rb) for more details.
 
+### Example of token
+
+This is a valid format token (might become invalid due to expiration at some point):
+
+`eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODI1OTMwMzAsImV4cCI6MTY5ODQwNDU1NSwiaXNzIjoiY3JpbWUtYXBwbHkifQ.x2UE5VnwN5mf8elByPBnjiNChvsySqDjiLht6eN3ZPY`
+
+It has 3 parts, separated by dots, base64-encoded:
+
+1. Header (`eyJhbGciOiJIUzI1NiJ9`), containing the algorithm used. No other details are needed.
+    ```json
+    {
+      "alg": "HS256"
+    }
+    ```
+
+2. Payload (`eyJpYXQiOjE2ODI1OTMwMzAsImV4cCI6MTY5ODQwNDU1NSwiaXNzIjoiY3JpbWUtYXBwbHkifQ`), with some mandatory details.
+    ```json
+    {
+      "iat": 1682593030,
+      "exp": 1698404555,
+      "iss": "crime-apply"
+    }
+    ```
+   *iat* is the issued at seconds since epoch, *exp* is the expire at seconds since epoch, and finally *iss* is the issuer identifier or the name of the consumer to whom this token belongs.
+
+3. Signature (`x2UE5VnwN5mf8elByPBnjiNChvsySqDjiLht6eN3ZPY`)
+
+   To create the signature part you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.
+
+The token must be included in each request, in an Authorization header (bearer).
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
