@@ -3,9 +3,13 @@
 module SimpleJwtAuth
   module Middleware
     module Grape
-      class Jwt < ::Grape::Middleware::Auth::Base
+      class Jwt < ::Grape::Middleware::Base
         ENV_AUTH_KEY = 'HTTP_AUTHORIZATION'
         ENV_PAYLOAD_KEY = 'grape_jwt.payload'
+
+        def initialize(app, options = nil)
+          super(app, **(options || {}))
+        end
 
         # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def call(env)

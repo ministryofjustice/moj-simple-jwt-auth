@@ -4,6 +4,10 @@ module SimpleJwtAuth
   module Middleware
     module Grape
       class Authorisation < ::Grape::Middleware::Base
+        def initialize(app, options = nil)
+          super(app, **(options || {}))
+        end
+
         def before
           return if test_env? || consumer_authorised?
 
